@@ -8,6 +8,10 @@ ExpirationDate = ARGV[3]
 CCV = ARGV[4]
 Amount = ARGV[5]
 
+if ARGV.length < 5
+    print "message , Not Enough Aruguments passed to charge-credit-card.rb"
+end
+
 request = CreateTransactionRequest.new
 request.transactionRequest = TransactionRequestType.new()
 request.transactionRequest.amount = Amount

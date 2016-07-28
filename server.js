@@ -44,21 +44,26 @@ router.post('/charge', function(req, res){
                 })
             }
             else if (stderr){
-
+                stderr = stderr.split(',')
+                stderr = {
+                    message             : stderr[1],
+                    AuthOrErrorCode     : stderr[3],
+                    TransIdOrErrorText  : stderr[5]
+                }
                 console.log(stderr)
                 res.json({
                     "ERROR" : stderr
                 })
             }
             else {
-
                 stdout = stdout.split(',')
                 stdout = {
-                    message     : stdout[1],
-                    AuthCode    : stdout[3],
-                    TransID     : stdout[5]
+                    Message             : stdout[1],
+                    AuthOrErrorCode     : stdout[3],
+                    TransIdOrErrorText  : stdout[5]
                 }
 
+                console.log(stdout)
                 res.json({
                     "Response" : stdout
                 })
@@ -66,7 +71,7 @@ router.post('/charge', function(req, res){
         } )
     }
     else {
-        res.json({"ERROR" : "Not Enough Parameters were sent. At least cardnumber, exp date and ccv"})
+        res.json({"ERROR" : "Not Enough Parameters were sent. At least cardnumber, exp date, ccv and ammount"})
     }
 
 })
@@ -80,8 +85,6 @@ router.post('/void', function(req, res){
         exec(TransactionString,
         (err, stdout, stderr) => {
 
-            stderr = JSON.parse(JSON.stringify(stderr))
-            stdout = JSON.parse(JSON.stringify(stdout))
             if (err){
                 console.error(err)
                 res.json({
@@ -89,14 +92,26 @@ router.post('/void', function(req, res){
                 })
             }
             else if (stderr){
-                console.error(stderr.Response)
+                stderr = stderr.split(',')
+                stderr = {
+                    Message             : stderr[1],
+                    TransIdOrErrorCode  : stderr[3],
+                    Text                : stderr[5]
+                }
+                console.log(stderr)
                 res.json({
-                    "ERROR" : stdout
+                    "ERROR" : stderr
                 })
             }
             else {
-                console.log('MESSAGE IS \n')
-                console.log(stdout.message)
+
+                stdout = stdout.split(',')
+                stdout =  {
+                    Message             : stdout[1],
+                    TransIdOrErrorCode  : stdout[3],
+                    Text                : stdout[5]
+                }
+
                 res.json({
                     "Resonse" : stdout
                 })
