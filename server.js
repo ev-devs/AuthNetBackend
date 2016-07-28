@@ -19,7 +19,7 @@ const EQ_KEY = process.env.EQ_AUTH_NET_TRANS_KEY
 
 const AuthNet = {
     chargeCreditCard : "ruby AuthNetTransactions/charge-credit-card.rb " + EQ_NAME + " " + EQ_KEY,
-    voidTransaction  : "ruby AuthNetTransactions/VoidTransaction.rb " + EQ_NAME + " " + EQ_KEY,
+    voidTransaction  : "ruby AuthNetTransactions/void-transaction.rb " + EQ_NAME + " " + EQ_KEY,
 }
 
 
@@ -27,14 +27,16 @@ var router = express.Router();
 
 router.get('/', function(req, res){
 
-
+    res.json({
+        "Welcome" : "to our API. This endpoint does nothing. You really should be reading the documentation if you get this message"
+    })
 });
 
 router.post('/charge', function(req, res){
 
-    if (req.body.cardnumber && req.body.expdate && req.body.ccv) {
+    if (req.body.cardnumber && req.body.expdate && req.body.ccv && req.body.amount) {
 
-        let TransactionString = AuthNet.chargeCreditCard + " " + req.body.cardnumber + " " + req.body.expdate + " " + req.body.ccv
+        let TransactionString = AuthNet.chargeCreditCard + " " + req.body.cardnumber + " " + req.body.expdate + " " + req.body.ccv + " " + req.body.amount
 
         exec( TransactionString ,
         (err, stdout, stderr) => {

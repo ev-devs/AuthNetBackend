@@ -13,7 +13,7 @@ response = transaction.create_transaction(request)
 
 if response.messages.resultCode == MessageTypeEnum::Ok
     MESSAGE = "Successfully voided the transaction"
-    TRANSID = "response.transactionResponse.transId"
+    TRANSID = response.transactionResponse.transId
     print "{ Message : " + MESSAGE + ", Transaction ID : " + TRANSID + " }"
 
 else
