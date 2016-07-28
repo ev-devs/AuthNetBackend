@@ -3,12 +3,17 @@ include AuthorizeNet::API
 
 transaction = Transaction.new( ARGV[0] , ARGV[1] , :gateway => :sandbox)
 
+CreditCardNumber = ARGV[2]
+ExpirationDate = ARGV[3]
+CCV = ARGV[4]
+
 request = CreateTransactionRequest.new
 
 request.transactionRequest = TransactionRequestType.new()
 request.transactionRequest.amount = 1000.90
 request.transactionRequest.payment = PaymentType.new
-request.transactionRequest.payment.creditCard = CreditCardType.new('4242424242424242','0220','123')
+#request.transactionRequest.payment.creditCard = CreditCardType.new('4242424242424242','0220','123')
+request.transactionRequest.payment.creditCard = CreditCardType.new(CreditCardNumber, ExpirationDate, CCV)
 request.transactionRequest.transactionType = TransactionTypeEnum::AuthCaptureTransaction
 
 response = transaction.create_transaction(request)

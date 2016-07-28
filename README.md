@@ -103,4 +103,4 @@ The `--harmony` flag is for arrow function support, just in case your node versi
 
 # TODO
 
-Eventually we will be integrating different gateway hooks so in an effort to keep the code the same on the client side, we are just going to handle the actual transactions on the server side. 
+Eventually we will be integrating different gateway hooks so in an effort to keep the code the same on the client side, we are just going to handle the actual transactions on the server side.

@@ -1,14 +1,17 @@
 'use strict'
 
-const express = require('express');
-const app = express();
-const exec = require('child_process').exec;
-const logger = require('morgan')
+const express       = require('express');
+const app           = express();
+const exec          = require('child_process').exec;
+const logger        = require('morgan')
+const bodyParser    = require('body-parser')
 
 console.log(process.env.EQ_URL)
 
 /*MIDDLEWARE*/
 app.use(logger('dev'))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended : false}))
 
 const EQ_NAME = process.env.EQ_AUTH_NET_NAME;
 const EQ_KEY = process.env.EQ_AUTH_NET_TRANS_KEY
@@ -30,30 +33,37 @@ router.get('/', function(req, res){
 
 router.post('/charge', function(req, res){
 
-    console.log(req.params)
+    if (req.body.cardnumber && req.body.expdate && req.body.ccv) {
 
-    exec( AuthNet.chargeCreditCard,
-    (err, stdout, stderr) => {
+        let TransactionString = AuthNet.chargeCreditCard + " " + req.body.cardnumber + " " + req.body.expdate + " " + req.body.ccv
 
-        if (err){
-            console.error(err)
-            res.json({
-                "ERROR"     : "Unable to execute charge credit card `ruby charge-credit-card.rb`"
-            })
-        }
-        else if (stderr){
-            console.error(stderr)
-            res.json({
-                "ERROR" : JSON.parse(JSON.stringify(stderr))
-            })
-        }
-        else {
-            console.log(stdout)
-            res.json({
-                "Response" : JSON.parse(JSON.stringify(stdout))
-            })
-        }
-    } )
+        exec( TransactionString ,
+        (err, stdout, stderr) => {
+
+            if (err){
+                console.error(err)
+                res.json({
+                    "ERROR"     : "Unable to execute charge credit card `charge-credit-card.rb`"
+                })
+            }
+            else if (stderr){
+                console.error(stderr)
+                res.json({
+                    "ERROR" : JSON.parse(JSON.stringify(stderr))
+                })
+            }
+            else {
+                console.log(stdout)
+                res.json({
+                    "Response" : JSON.parse(JSON.stringify(stdout))
+                })
+            }
+        } )
+    }
+    else {
+        res.json({"ERROR" : "Not Enough Parameters were sent. At least cardnumber, exp date and ccv"})
+    }
+
 })
 
 
