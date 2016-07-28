@@ -51,17 +51,20 @@ The `--harmony` flag is for arrow function support, just in case your node versi
     })
 
 
-   ##### Parameters  
-        Amount, CreditCardNumber, CCV, Name On Card, Exp Date
-   ##### Response  
+##### Parameters
+
+    Amount, CreditCardNumber, CCV, Name On Card, Exp Date
+
+##### Response  
+
     Error   # (e.g. You messed it up bro, try again)
 
-OR
+##### OR
 
     Authorization Code # (e.g. KUSI06)
     Transaction ID     # (e.g. 60005898263)
 
-## Void a Transaction 
+## Void a Transaction
 
     app.post('/void', function(req, res){
 
