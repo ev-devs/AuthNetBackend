@@ -67,5 +67,36 @@ The `--harmony` flag is for arrow function support, just in case your node versi
 ## Void a Transaction
 
     app.post('/void', function(req, res){
-
+        req.body.transid
     })
+
+##### Parameters
+
+    Transaction ID # (e.g. Transaction ID from response above)
+
+##### Response  
+
+    Error   # (e.g. You messed it up bro, try again)
+
+##### OR
+
+    Success Code # (e.g. 1, 2, 3,  4 or 5)
+
+
+## Refund a Transaction
+
+    app.post('/refund', function(req, res){
+        req.body.transid
+    })
+
+##### Parameters
+
+    Transaction ID # (e.g. Transaction ID charge response above)
+
+##### Response  
+
+    Error   # (e.g. You messed it up bro, try again)
+
+##### OR
+
+    Success Code # (e.g. 1, 2, 3,  4 or 5)
