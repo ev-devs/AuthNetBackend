@@ -4,7 +4,11 @@ require 'authorizenet'
 
 include AuthorizeNet::API
 
-transaction = Transaction.new( ENV["EQ_AUTH_NET_NAME"] , ENV["EQ_AUTH_NET_TRANS_KEY"] , :gateway => :sandbox)
+transaction = Transaction.new( ARGV[0] , ARGV[1] , :gateway => :sandbox)
+
+#print "TRANSACTION INFO IS  "
+#print ARGV[0] + " "
+#print ARGV[1] + " "
 
 request = CreateTransactionRequest.new
 
@@ -23,5 +27,5 @@ else
   puts response.messages.messages[0].text
   puts response.transactionResponse.errors.errors[0].errorCode
   puts response.transactionResponse.errors.errors[0].errorText
-  raise "Failed to charge card."
+  #raise "Failed to charge card."
 end
