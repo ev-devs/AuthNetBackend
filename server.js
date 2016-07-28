@@ -18,9 +18,8 @@ const EQ_KEY = process.env.EQ_AUTH_NET_TRANS_KEY
 
 
 const AuthNet = {
-    chargeCreditCard : "ruby AuthNetTransactions/charge-credit-card.rb " + EQ_NAME  + " " + EQ_KEY,
-    authorizeCreditCard : "",
-
+    chargeCreditCard : "ruby AuthNetTransactions/charge-credit-card.rb " + EQ_NAME + " " + EQ_KEY,
+    voidTransaction  : "ruby AuthNetTransactions/VoidTransaction.rb " + EQ_NAME + " " + EQ_KEY,
 }
 
 
@@ -68,8 +67,37 @@ router.post('/charge', function(req, res){
 
 
 router.post('/void', function(req, res){
-    console.log(params)
-    // we void an order here
+    if (req.body.transid){
+
+        let TransactionString = AuthNet.voidTransaction + " " + req.body.transid
+
+        exec(TransactionString,
+        (err, stdout, stderr) => {
+            if (err){
+                console.error(err)
+                res.json({
+                    "ERROR" : "Unavle to execute void transaction `void-transaction.rb`"
+                })
+            }
+            else if (stderr){
+                console.error(stderr)
+                res.json({
+                    "ERROR" : JSON.parse(JSON.stringify(stderr))
+                })
+            }
+            else {
+                console.log(stdout)
+                res.json({
+                    "Resonse" : JSON.parse(JSON.stringify(stdout))
+                })
+            }
+        })
+    }
+    else {
+        res.json({
+            "ERROR" : "Not Enough Parameters were sent. We only need transid so you messed up fam"
+        })
+    }
 })
 
 
