@@ -1,0 +1,38 @@
+# AuthNetBackend
+
+This is the backend server for ElectronPOS. It has 3 main functionalities.
+
+* It creates a transaction
+* It voids a transaction
+* It refunds a transaction
+
+That's really it.
+
+# Installation
+
+In order to install just run the 2 commands below. After, you will need to configure
+some environment variables
+
+    $ npm install       # At least npm version 3.9.5 with and node version v6.2.2
+    $ bundle install    # At least Bundler version 1.12.3 and gem version 2.5.1
+
+### Using Authorize.net credentials
+Right now we only support Authorize.net as our gateway, but eventually we will
+implement support for other gateways.
+
+
+open up your `.bashrc` or `.bash_profile` and create the following environment variables
+
+    export EQ_AUTH_NET_NAME="your-authorize.net-login-id"
+    export EQ_AUTH_NET_TRANS_KEY="your-authorize.net-transaction-key"
+
+That's it for now. Either `source` your new bash configurations or restart bash.
+
+### Now run the final command
+
+    $ sudo node server.js --harmony
+
+The `--harmony` flag is for arrow function support, just in case your node version is a little too low
+
+
+# AuthNetBackend API
