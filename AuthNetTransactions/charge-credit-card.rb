@@ -1,19 +1,12 @@
-require 'rubygems'
-require 'yaml'
 require 'authorizenet'
-
 include AuthorizeNet::API
 
 transaction = Transaction.new( ARGV[0] , ARGV[1] , :gateway => :sandbox)
 
-#print "TRANSACTION INFO IS  "
-#print ARGV[0] + " "
-#print ARGV[1] + " "
-
 request = CreateTransactionRequest.new
 
 request.transactionRequest = TransactionRequestType.new()
-request.transactionRequest.amount = 16.00
+request.transactionRequest.amount = 1000.90
 request.transactionRequest.payment = PaymentType.new
 request.transactionRequest.payment.creditCard = CreditCardType.new('4242424242424242','0220','123')
 request.transactionRequest.transactionType = TransactionTypeEnum::AuthCaptureTransaction
@@ -21,11 +14,14 @@ request.transactionRequest.transactionType = TransactionTypeEnum::AuthCaptureTra
 response = transaction.create_transaction(request)
 
 if response.messages.resultCode == MessageTypeEnum::Ok
-  puts "Successful charge (auth + capture) (authorization code: #{response.transactionResponse.authCode}) (transaction ID: #{response.transactionResponse.transId})"
+    MESSAGE     = "Successful charge (auth + capture) "
+    AUTHCODE    = response.transactionResponse.authCode
+    TRANSID     = response.transactionResponse.transId
+    print " { Message : " + MESSAGE + ", Authorization Code : " + AUTHCODE + ", Transaction ID : " + TRANSID + " }"
 
 else
-  puts response.messages.messages[0].text
-  puts response.transactionResponse.errors.errors[0].errorCode
-  puts response.transactionResponse.errors.errors[0].errorText
-  #raise "Failed to charge card."
+    MESSAGE     = response.messages.messages[0].text
+    ERRORCODE   = response.transactionResponse.errors.errors[0].errorCode
+    ERRORTEXT   = response.transactionResponse.errors.errors[0].errorText
+    print " { Message : " + MESSAGE + ", Error Code : " + ERRORCODE + ", Error Text : " + ERRORTEXT + " }"
 end
