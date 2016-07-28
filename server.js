@@ -6,29 +6,25 @@ const exec          = require('child_process').exec;
 const logger        = require('morgan')
 const bodyParser    = require('body-parser')
 
-console.log(process.env.EQ_URL)
-
 /*MIDDLEWARE*/
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : false}))
 
 const EQ_NAME = process.env.EQ_AUTH_NET_NAME;
-const EQ_KEY = process.env.EQ_AUTH_NET_TRANS_KEY
-
+const EQ_KEY = process.env.EQ_AUTH_NET_TRANS_KEY;
 
 const AuthNet = {
-    chargeCreditCard : "ruby AuthNetTransactions/charge-credit-card.rb " + EQ_NAME + " " + EQ_KEY,
-    voidTransaction  : "ruby AuthNetTransactions/void-transaction.rb " + EQ_NAME + " " + EQ_KEY,
+    chargeCreditCard    : "ruby AuthNetTransactions/charge-credit-card.rb " + EQ_NAME + " " + EQ_KEY,
+    voidTransaction     : "ruby AuthNetTransactions/void-transaction.rb "   + EQ_NAME + " " + EQ_KEY,
+    refundTransaction   : "ruby AuthNetTransactions/refund-transaction.rb " + EQ_NAME + " " + EQ_KEY
 }
-
 
 var router = express.Router();
 
 router.get('/', function(req, res){
-
     res.json({
-        "Welcome" : "to our API. This endpoint does nothing. You really should be reading the documentation if you get this message"
+        "Welcome" : "to our API. This is the root endpoint and it does nothing"
     })
 });
 
@@ -48,15 +44,23 @@ router.post('/charge', function(req, res){
                 })
             }
             else if (stderr){
-                console.error(stderr)
+
+                console.log(stderr)
                 res.json({
-                    "ERROR" : JSON.parse(JSON.stringify(stderr))
+                    "ERROR" : stderr
                 })
             }
             else {
-                console.log(stdout)
+
+                stdout = stdout.split(',')
+                stdout = {
+                    message     : stdout[1],
+                    AuthCode    : stdout[3],
+                    TransID     : stdout[5]
+                }
+
                 res.json({
-                    "Response" : JSON.parse(JSON.stringify(stdout))
+                    "Response" : stdout
                 })
             }
         } )
@@ -67,30 +71,34 @@ router.post('/charge', function(req, res){
 
 })
 
-
 router.post('/void', function(req, res){
+
     if (req.body.transid){
 
         let TransactionString = AuthNet.voidTransaction + " " + req.body.transid
 
         exec(TransactionString,
         (err, stdout, stderr) => {
+
+            stderr = JSON.parse(JSON.stringify(stderr))
+            stdout = JSON.parse(JSON.stringify(stdout))
             if (err){
                 console.error(err)
                 res.json({
-                    "ERROR" : "Unavle to execute void transaction `void-transaction.rb`"
+                    "ERROR" : "Unable to execute void transaction `void-transaction.rb`"
                 })
             }
             else if (stderr){
-                console.error(stderr)
+                console.error(stderr.Response)
                 res.json({
-                    "ERROR" : JSON.parse(JSON.stringify(stderr))
+                    "ERROR" : stdout
                 })
             }
             else {
-                console.log(stdout)
+                console.log('MESSAGE IS \n')
+                console.log(stdout.message)
                 res.json({
-                    "Resonse" : JSON.parse(JSON.stringify(stdout))
+                    "Resonse" : stdout
                 })
             }
         })
@@ -102,12 +110,9 @@ router.post('/void', function(req, res){
     }
 })
 
+//app.use('/transactions', router)
 
-
-
-
-
-app.use('/transactions', router)
+app.use(router)
 
 app.listen(3000, function(err){
     if (err){

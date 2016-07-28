@@ -9,7 +9,6 @@ CCV = ARGV[4]
 Amount = ARGV[5]
 
 request = CreateTransactionRequest.new
-
 request.transactionRequest = TransactionRequestType.new()
 request.transactionRequest.amount = Amount
 request.transactionRequest.payment = PaymentType.new
@@ -22,11 +21,11 @@ if response.messages.resultCode == MessageTypeEnum::Ok
     MESSAGE     = "Successful charge (auth + capture) "
     AUTHCODE    = response.transactionResponse.authCode
     TRANSID     = response.transactionResponse.transId
-    print " { Message : " + MESSAGE + ", Authorization Code : " + AUTHCODE + ", Transaction ID : " + TRANSID + " }"
+    print "message , " + MESSAGE + " , AuthorizationCode , " + AUTHCODE + " , TransactionID , " + TRANSID
 
 else
     MESSAGE     = response.messages.messages[0].text
     ERRORCODE   = response.transactionResponse.errors.errors[0].errorCode
     ERRORTEXT   = response.transactionResponse.errors.errors[0].errorText
-    print " { Message : " + MESSAGE + ", Error Code : " + ERRORCODE + ", Error Text : " + ERRORTEXT + " }"
+    print " message , " + MESSAGE + " , ErrorCode , " + ERRORCODE + " , ErrorText , " + ERRORTEXT
 end
