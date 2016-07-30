@@ -36,6 +36,7 @@ router.post('/charge', function(req, res){
 
         exec( TransactionString ,
         (err, stdout, stderr) => {
+            console.log(stdout)
             if (err){
                 console.error(err)
                 res.json({
@@ -82,18 +83,20 @@ router.post('/void', function(req, res){
             if (err){
                 console.error(err)
                 res.json({
-                    "ERROR" : "Unable to execute void transaction `void-transaction.rb`"
+                    "error" : "Unable to execute void transaction `void-transaction.rb`"
                 })
             }
             else {
+                console.log(stdout)
+                stdout = stdout.split(',')
                 if (stdout[0] != "error"){
                     stdout = {
                         message     : stdout[2],
-                        transId     : stdout[4],
-                        text        : stdout[6]
+                        transId     : stdout[4]
                     }
                 }
                 else {
+
                     stdout = {
                         message     : stdout[2],
                         errorCode   : stdout[4],
