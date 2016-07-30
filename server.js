@@ -73,9 +73,10 @@ router.post('/charge', function(req, res){
 
 router.post('/void', function(req, res){
 
-    if (req.body.transid){
+    if (req.body.transId){
 
-        let TransactionString = AuthNet.voidTransaction + " " + req.body.transid
+
+        let TransactionString = AuthNet.voidTransaction + " " + req.body.transId
 
         exec(TransactionString,
         (err, stdout, stderr) => {

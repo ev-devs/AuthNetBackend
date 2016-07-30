@@ -16,10 +16,19 @@ request.transactionRequest.transactionType = TransactionTypeEnum::VoidTransactio
 response = transaction.create_transaction(request)
 
 if response.messages.resultCode == MessageTypeEnum::Ok
-    MESSAGE = "Successfully voided the transaction"
-    TRANSID = response.transactionResponse.transId
-    Text    = ""
-    print "success,message," + MESSAGE + ",TransactionID," + TRANSID + ',' + "Text," + Text
+
+    if response.transactionResponse.transId != "0"
+        MESSAGE = "Successfully voided the transaction"
+        TRANSID = response.transactionResponse.transId
+        Text    = ""
+        print "success,message," + MESSAGE + ",TransactionID," + TRANSID + ',' + "Text," + Text
+    else
+        MESSAGE     = response.messages.messages[0].text
+        ERRORCODE   = response.transactionResponse.errors.errors[0].errorCode
+        ERRORTEXT   = response.transactionResponse.errors.errors[0].errorText
+        print "error,message," + MESSAGE + ",ErrorCode," + ERRORCODE + ",ErrorText," + ERRORTEXT
+    end
+
 else
     MESSAGE     = response.messages.messages[0].text
     ERRORCODE   = response.transactionResponse.errors.errors[0].errorCode
