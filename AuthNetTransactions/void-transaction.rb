@@ -19,10 +19,10 @@ if response.messages.resultCode == MessageTypeEnum::Ok
     MESSAGE = "Successfully voided the transaction"
     TRANSID = response.transactionResponse.transId
     Text    = ""
-    print " message , " + MESSAGE + " , TransactionID , " + TRANSID + ', ' + "Text , " + Text
+    print "success,message," + MESSAGE + ",TransactionID," + TRANSID + ',' + "Text," + Text
 else
     MESSAGE     = response.messages.messages[0].text
     ERRORCODE   = response.transactionResponse.errors.errors[0].errorCode
     ERRORTEXT   = response.transactionResponse.errors.errors[0].errorText
-    print " message , " + MESSAGE + " , ErrorCode , " + ERRORCODE + " , ErrorText , " + ERRORTEXT
+    print "error,message," + MESSAGE + ",ErrorCode," + ERRORCODE + ",ErrorText," + ERRORTEXT
 end

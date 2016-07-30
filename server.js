@@ -36,42 +36,36 @@ router.post('/charge', function(req, res){
 
         exec( TransactionString ,
         (err, stdout, stderr) => {
-
             if (err){
                 console.error(err)
                 res.json({
-                    "ERROR"     : "Unable to execute charge credit card `charge-credit-card.rb`"
-                })
-            }
-            else if (stderr){
-                stderr = stderr.split(',')
-                stderr = {
-                    message             : stderr[1],
-                    AuthOrErrorCode     : stderr[3],
-                    TransIdOrErrorText  : stderr[5]
-                }
-                console.log(stderr)
-                res.json({
-                    "ERROR" : stderr
+                    "error"     : "Unable to execute charge credit card `charge-credit-card.rb`"
                 })
             }
             else {
                 stdout = stdout.split(',')
-                stdout = {
-                    Message             : stdout[1],
-                    AuthOrErrorCode     : stdout[3],
-                    TransIdOrErrorText  : stdout[5]
+                if (stdout[0] != "error"){
+                    stdout = {
+                        message     : stdout[2],
+                        authCode    : stdout[4],
+                        transId     : stdout[6]
+                    }
                 }
-
-                console.log(stdout)
+                else {
+                    stdout = {
+                        message     : stdout[2],
+                        errorCode   : stdout[4],
+                        errorText   : stdout[6]
+                    }
+                }
                 res.json({
-                    "Response" : stdout
+                    "response" : stdout
                 })
             }
         } )
     }
     else {
-        res.json({"ERROR" : "Not Enough Parameters were sent. At least cardnumber, exp date, ccv and ammount"})
+        res.json({"error" : "Not Enough Parameters were sent. At least cardnumber, exp date, ccv and ammount"})
     }
 
 })
@@ -91,41 +85,34 @@ router.post('/void', function(req, res){
                     "ERROR" : "Unable to execute void transaction `void-transaction.rb`"
                 })
             }
-            else if (stderr){
-                stderr = stderr.split(',')
-                stderr = {
-                    Message             : stderr[1],
-                    TransIdOrErrorCode  : stderr[3],
-                    Text                : stderr[5]
-                }
-                console.log(stderr)
-                res.json({
-                    "ERROR" : stderr
-                })
-            }
             else {
-
-                stdout = stdout.split(',')
-                stdout =  {
-                    Message             : stdout[1],
-                    TransIdOrErrorCode  : stdout[3],
-                    Text                : stdout[5]
+                if (stdout[0] != "error"){
+                    stdout = {
+                        message     : stdout[2],
+                        transId     : stdout[4],
+                        text        : stdout[6]
+                    }
                 }
-
+                else {
+                    stdout = {
+                        message     : stdout[2],
+                        errorCode   : stdout[4],
+                        errorText   : stdout[6]
+                    }
+                }
                 res.json({
-                    "Resonse" : stdout
+                    "response" : stdout
                 })
             }
         })
     }
     else {
         res.json({
-            "ERROR" : "Not Enough Parameters were sent. We only need transid so you messed up fam"
+            "error" : "Not Enough Parameters were sent. We only need transid so you messed up fam"
         })
     }
 })
 
-//app.use('/transactions', router)
 
 app.use(router)
 

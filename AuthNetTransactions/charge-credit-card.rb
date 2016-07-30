@@ -9,7 +9,7 @@ CCV = ARGV[4]
 Amount = ARGV[5]
 
 if ARGV.length < 5
-    print "message , Not Enough Aruguments passed to charge-credit-card.rb"
+    print "error,message,Not Enough Aruguments passed to charge-credit-card.rb"
 end
 
 request = CreateTransactionRequest.new
@@ -22,14 +22,14 @@ request.transactionRequest.transactionType = TransactionTypeEnum::AuthCaptureTra
 response = transaction.create_transaction(request)
 
 if response.messages.resultCode == MessageTypeEnum::Ok
-    MESSAGE     = "Successful charge (auth + capture) "
+    MESSAGE     = "Successful charge (auth + capture)"
     AUTHCODE    = response.transactionResponse.authCode
     TRANSID     = response.transactionResponse.transId
-    print "message , " + MESSAGE + " , AuthorizationCode , " + AUTHCODE + " , TransactionID , " + TRANSID
+    print "success,message," + MESSAGE + ",AuthorizationCode," + AUTHCODE + ",TransactionID," + TRANSID
 
 else
     MESSAGE     = response.messages.messages[0].text
     ERRORCODE   = response.transactionResponse.errors.errors[0].errorCode
     ERRORTEXT   = response.transactionResponse.errors.errors[0].errorText
-    print " message , " + MESSAGE + " , ErrorCode , " + ERRORCODE + " , ErrorText , " + ERRORTEXT
+    print "error,message," + MESSAGE + ",ErrorCode," + ERRORCODE + ",ErrorText," + ERRORTEXT
 end
