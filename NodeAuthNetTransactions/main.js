@@ -1,6 +1,6 @@
 
 var express =  require('express')
-let nodeRouter = express.Router()
+var nodeRouter = express.Router()
 
 let chargeCreditCard    = require('./transactions/charge-credit-card.js')
 let voidTransaction     = require('./transactions/void-transaction.js')
