@@ -130,6 +130,6 @@ app.listen(8085, function(err){
         console.error("There was an error starting the web server")
     }
     else {
-        console.log('Server started and running on port 3000')
+        console.log('Server started and running on port 8085')
     }
 })
