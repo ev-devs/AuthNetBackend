@@ -24,8 +24,8 @@ response = transaction.create_transaction(request)
 if response.messages.resultCode == MessageTypeEnum::Ok
     MESSAGE     = "Successful charge (auth + capture)"
     AUTHCODE    = response.transactionResponse.authCode
-    TRANSID     = response.transactionResponse.transId
-    print "success,message," + MESSAGE + ",AuthorizationCode," + AUTHCODE + ",TransactionID," + TRANSID
+    #TRANSID     = response.transactionResponse.transId
+    #print "success,message," + MESSAGE + ",AuthorizationCode," + AUTHCODE + ",TransactionID," + TRANSID
 
 else
     MESSAGE     = response.messages.messages[0].text
