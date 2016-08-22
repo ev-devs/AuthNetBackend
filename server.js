@@ -14,6 +14,8 @@ app.use(bodyParser.urlencoded({extended : false}))
 const EQ_NAME = process.env.EQ_AUTH_NET_NAME;
 const EQ_KEY = process.env.EQ_AUTH_NET_TRANS_KEY;
 
+
+
 const AuthNet = {
     chargeCreditCard    : "ruby AuthNetTransactions/charge-credit-card.rb " + EQ_NAME + " " + EQ_KEY,
     voidTransaction     : "ruby AuthNetTransactions/void-transaction.rb "   + EQ_NAME + " " + EQ_KEY,
@@ -21,6 +23,7 @@ const AuthNet = {
 }
 
 var router = express.Router();
+let nodeRouter = require('./NodeAuthNetTransactions/main.js')
 
 router.get('/', function(req, res){
     res.json({
