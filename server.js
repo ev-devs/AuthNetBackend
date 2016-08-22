@@ -75,7 +75,6 @@ router.post('/void', function(req, res){
 
     if (req.body.transId){
 
-
         let TransactionString = AuthNet.voidTransaction + " " + req.body.transId
 
         exec(TransactionString,
@@ -119,7 +118,7 @@ router.post('/void', function(req, res){
 
 
 router.post('/refund', function(req, res){
-
+    res.send('not working atm')
 })
 
 
