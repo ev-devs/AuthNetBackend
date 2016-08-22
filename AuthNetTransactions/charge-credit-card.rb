@@ -16,7 +16,7 @@ request = CreateTransactionRequest.new
 request.transactionRequest = TransactionRequestType.new()
 request.transactionRequest.amount = Amount
 request.transactionRequest.payment = PaymentType.new
-request.transactionRequest.payment.creditCard = CreditCardType.new(CreditCardNumber, ExpirationDate, nil)
+request.transactionRequest.payment.creditCard = CreditCardType.new(CreditCardNumber, ExpirationDate, "123")
 request.transactionRequest.transactionType = TransactionTypeEnum::AuthCaptureTransaction
 
 response = transaction.create_transaction(request)
