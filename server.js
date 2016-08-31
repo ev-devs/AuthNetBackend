@@ -6,6 +6,11 @@ const exec          = require('child_process').exec;
 const logger        = require('morgan')
 const bodyParser    = require('body-parser')
 
+// this is for our myql database to create device ids
+require('lib/mysql')
+
+
+
 /*MIDDLEWARE*/
 app.use(logger('dev'))
 app.use(bodyParser.json())
@@ -13,6 +18,9 @@ app.use(bodyParser.urlencoded({extended : false}))
 
 const EQ_NAME = process.env.EQ_AUTH_NET_NAME;
 const EQ_KEY = process.env.EQ_AUTH_NET_TRANS_KEY;
+
+const tokensDatabase = require('lib/config').database;
+const secret = require('lib/config').database;
 
 const AuthNet = {
     chargeCreditCard    : "ruby AuthNetTransactions/charge-credit-card.rb " + EQ_NAME + " " + EQ_KEY,
@@ -27,6 +35,16 @@ router.get('/', function(req, res){
         "Welcome" : "to our API. This is the root endpoint and it does nothing"
     })
 });
+
+
+router.post('/authorize', function(req res){
+    if (req.guid){
+
+    }
+    else {
+        res.send('We need a guid in order to createa device id')
+    }
+})
 
 router.post('/charge', function(req, res){
 
