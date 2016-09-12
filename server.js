@@ -6,11 +6,6 @@ const exec          = require('child_process').exec;
 const logger        = require('morgan')
 const bodyParser    = require('body-parser')
 
-// this is for our myql database to create device ids
-require('lib/mysql')
-
-
-
 /*MIDDLEWARE*/
 app.use(logger('dev'))
 app.use(bodyParser.json())
@@ -19,13 +14,10 @@ app.use(bodyParser.urlencoded({extended : false}))
 const EQ_NAME = process.env.EQ_AUTH_NET_NAME;
 const EQ_KEY = process.env.EQ_AUTH_NET_TRANS_KEY;
 
-const tokensDatabase = require('lib/config').database;
-const secret = require('lib/config').database;
-
 const AuthNet = {
     chargeCreditCard    : "ruby AuthNetTransactions/charge-credit-card.rb " + EQ_NAME + " " + EQ_KEY,
     voidTransaction     : "ruby AuthNetTransactions/void-transaction.rb "   + EQ_NAME + " " + EQ_KEY,
-    refundTransaction   : "ruby AuthNetTransactions/refund-transaction.rb " + EQ_NAME + " " + EQ_KEY
+    returnTransaction   : "ruby AuthNetTransactions/refund-transaction.rb " + EQ_NAME + " " + EQ_KEY
 }
 
 var router = express.Router();
@@ -37,7 +29,7 @@ router.get('/', function(req, res){
 });
 
 
-router.post('/authorize', function(req res){
+router.post('/authorize', function(req res){p
     if (req.guid){
 
     }
@@ -129,14 +121,20 @@ router.post('/void', function(req, res){
     }
     else {
         res.json({
-            "error" : "Not Enough Parameters were sent. We only need transid so you messed up fam"
+            "error" : "Not Enough Parameters were sent. We only need transid"
         })
     }
 })
 
 
-router.post('/refund', function(req, res){
-    res.send('not working atm')
+router.post('/return', function(req, res){
+
+    if (req.body.cardnumber && req.body.cardname && req.body.amount){
+        let TransactionString = AuthNet.returnTransaction + " " +req.body.cardnumber + " " + req.body.cardname + " " + req.body.amount
+    }
+    else {
+        res.json({ "error" : "Not enough parameters were sent" })
+    }
 })
 
 
