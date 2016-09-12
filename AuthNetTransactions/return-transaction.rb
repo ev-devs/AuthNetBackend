@@ -2,14 +2,14 @@ require 'authorizenet'
 include AuthorizeNet::API
 
 
+if ARGV.length < 5
+    print "error,message,Not Enough Arguments passed to returns.rb"
+    exit
+end
+
 transaction = Transaction.new( ARGV[0], ARGV[1], :gateway => :sandbox)
 request = CreateTransactionRequest.new
 
-
-if ARGV.length < 5
-    print "error,message,Not Enough Arguments passed to returns.rb"
-    abort('error,message,Not Enough Arguments passed to returns.rb')
-end
 
 CreditCardNumber    = ARGV[2]
 Amount              = ARGV[3]
