@@ -22,7 +22,6 @@ request.transactionRequest.transactionType = TransactionTypeEnum::AuthCaptureTra
 
 response = transaction.create_transaction(request)
 
-
 if response != nil
     if response.messages.resultCode == MessageTypeEnum::Ok
         if response.transactionResponse != nil && response.transactionResponse.messages != nil

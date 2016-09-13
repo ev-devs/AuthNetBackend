@@ -28,7 +28,6 @@ router.get('/', function(req, res){
     })
 });
 
-
 router.post('/authorize', function(req, res){
     if (req.guid){
 
@@ -112,7 +111,7 @@ router.post('/void', function(req, res){
                 else {
 
                     if ( stdout.length > 3) {
-                        
+
                         stdout = {
                             message     : stdout[2],
                             errorCode   : stdout[4].split(':')[1],
@@ -147,7 +146,6 @@ router.post('/return', function(req, res){
         res.json({ "error" : "Not enough parameters were sent" })
     }
 })
-
 
 app.use(router)
 
