@@ -15,9 +15,9 @@ const EQ_NAME = process.env.EQ_AUTH_NET_NAME;
 const EQ_KEY = process.env.EQ_AUTH_NET_TRANS_KEY;
 
 const AuthNet = {
-    chargeCreditCard    : "ruby AuthNetTransactions/charge-credit-card.rb " + EQ_NAME + " " + EQ_KEY,
-    voidTransaction     : "ruby AuthNetTransactions/void-transaction.rb "   + EQ_NAME + " " + EQ_KEY,
-    returnTransaction   : "ruby AuthNetTransactions/refund-transaction.rb " + EQ_NAME + " " + EQ_KEY
+    chargeCreditCard    : "ruby ./AuthNetTransactions/charge-credit-card.rb " + EQ_NAME + " " + EQ_KEY,
+    voidTransaction     : "ruby ./AuthNetTransactions/void-transaction.rb "   + EQ_NAME + " " + EQ_KEY,
+    returnTransaction   : "ruby ./AuthNetTransactions/refund-transaction.rb " + EQ_NAME + " " + EQ_KEY
 }
 
 var router = express.Router();
@@ -29,7 +29,7 @@ router.get('/', function(req, res){
 });
 
 
-router.post('/authorize', function(req res){p
+router.post('/authorize', function(req, res){
     if (req.guid){
 
     }
@@ -63,10 +63,11 @@ router.post('/charge', function(req, res){
                     }
                 }
                 else {
+                    //console.log(stdout)
                     stdout = {
-                        message     : stdout[2],
-                        errorCode   : stdout[4],
-                        errorText   : stdout[6]
+                        message         : stdout[2],
+                        errorCode       : stdout[3].split(':')[1],
+                        errorText       : stdout[4].split(':')[1]
                     }
                 }
                 res.json({
@@ -99,18 +100,29 @@ router.post('/void', function(req, res){
             else {
                 console.log(stdout)
                 stdout = stdout.split(',')
+
                 if (stdout[0] != "error"){
                     stdout = {
-                        message     : stdout[2],
-                        transId     : stdout[4]
+                        message         : stdout[2],
+                        responseCode    : stdout[4].split(':')[1],
+                        code            : stdout[6].split(':')[1],
+                        description     : stdout[8].split(':')[1]
                     }
                 }
                 else {
 
-                    stdout = {
-                        message     : stdout[2],
-                        errorCode   : stdout[4],
-                        errorText   : stdout[6]
+                    if ( stdout.length > 3) {
+                        
+                        stdout = {
+                            message     : stdout[2],
+                            errorCode   : stdout[4].split(':')[1],
+                            errorText   : stdout[6]
+                        }
+                    }
+                    else {
+                        stdout = {
+                            error : stdout[2]
+                        }
                     }
                 }
                 res.json({
@@ -121,11 +133,10 @@ router.post('/void', function(req, res){
     }
     else {
         res.json({
-            "error" : "Not Enough Parameters were sent. We only need transid"
+            "error" : "Not Enough Parameters were sent. We only need transId"
         })
     }
 })
-
 
 router.post('/return', function(req, res){
 
